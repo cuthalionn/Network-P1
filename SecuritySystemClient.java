@@ -4,11 +4,14 @@
  * and open the template in the editor.
  */
 import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import javax.swing.JOptionPane;
@@ -51,7 +54,7 @@ public class SecuritySystemClient {
        System.out.println(e);
     }
     
-    
+    int fileCounter=0;
     //Authorization 
     String datas = username+":"+password;
     byte[] data = datas.getBytes(StandardCharsets.US_ASCII);
@@ -83,7 +86,18 @@ public class SecuritySystemClient {
 	         else if(inMes == 4 ){//emergency
 	            System.out.println("Server: Emergency");
 	            //get data sent alarm or discard
-	            
+	            input.read();
+	            input.read();
+	            String message = "";
+	            //here
+	            BufferedWriter writer = new BufferedWriter(new FileWriter("snapshot_"+(fileCounter++)+".txt"));
+	            while((message = input.readLine()) != null){
+	            	System.out.println("not null : "+ message);
+					writer.write(message+ "\n");
+	            }
+	            System.out.println("Out of loop");
+				writer.close();
+				System.out.println("file closed");
 	            Scanner scan = new Scanner(System.in);
 	            System.out.print("Send alarm or discard (1/2):");
 	            int userChoice = scan.nextInt();
