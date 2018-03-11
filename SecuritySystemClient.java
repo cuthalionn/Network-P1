@@ -12,6 +12,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import javax.swing.JOptionPane;
+import java.util.Scanner;
 /**
  *
  * @author taha
@@ -63,34 +64,51 @@ public class SecuritySystemClient {
         System.out.println("Server: Invalid");
     else{
          System.out.println("Server: OK");
-         inMes =-1;
-         //wait for responses
-         while(inMes == -1){
-             System.out.println("no message");
-             inMes= (int) input.read();
-         };
-         //message arrived
-         if(inMes ==1){//keepalive
-             //send keepalive
-             System.out.println("Server: Keepalive");
-             byte[] mes = mesSizeArr(1,null);
-             output.write(mes);
-             System.out.println("Client: Keepalive sent");
-         }
-         else if(inMes == 4 ){//emergency
-             System.out.println("Server: Emergency");
-             //get data sent alarm or discard
-         }
-         else if (inMes == 7) // exit 
-             return;
-         else
-             System.out.println("Unexpexted message code: "+ inMes);
-    }
-        
-   inMes = -1;
-    
-    while ((inMes = input.read()) == -1);
-    System.out.println("message:"+ inMes);
+         
+         while(true){
+         	inMes =-1;
+	         //wait for responses
+	         while(!(inMes == 1 || inMes== 4 || inMes==7)){
+	             //System.out.println("no message");
+	             inMes= (int) input.read();
+	         };
+	         //message arrived
+	         if(inMes ==1){//keepalive
+	             //send keepalive
+	             System.out.println("Server: Keepalive");
+	             byte[] mes = mesSizeArr(1,null);
+	             output.write(mes);
+	             System.out.println("Client: Keepalive sent");
+	         }
+	         else if(inMes == 4 ){//emergency
+	            System.out.println("Server: Emergency");
+	            //get data sent alarm or discard
+	            
+	            Scanner scan = new Scanner(System.in);
+	            System.out.print("Send alarm or discard (1/2):");
+	            int userChoice = scan.nextInt();
+	            if(userChoice==2){
+	            	System.out.println("Client: Discard sent");
+	            	byte[] mes = mesSizeArr(6,null);
+	            	output.write(mes);
+	            }
+	            else if(userChoice==1){
+	            	System.out.println("Client: alarm sent");
+	            	byte[] mes = mesSizeArr(5,null);
+	            	output.write(mes);
+	            }
+	         }
+	         else if (inMes == 7) {// exit 
+	         System.out.println("Server: Exit");
+	             System.exit(0);
+	         }
+	         else
+	             System.out.println("Unexpexted message code: "+ inMes);
+		}
+	}
+	    
+	    while ((inMes = input.read()) == -1);
+	    System.out.println("message:"+ inMes);
     
     try {
            output.close();

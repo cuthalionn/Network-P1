@@ -1,0 +1,22 @@
+Server: OK
+no message
+no message
+no message
+Server: Keepalive
+Client: Keepalive sent
+no message
+no message
+no message
+no message
+no message
+no message
+Server: Keepalive
+Client: Keepalive sent
+no message
+no message
+no message
+no message
+no message
+no message
+Server: Emergency
+Send alarm or discard (1/2):
