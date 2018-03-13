@@ -91,7 +91,7 @@ public class SecuritySystemClient {
 	            input.read(size2);
 	            int num = (size2[1] & 0xFF) + ((size2[0] & 0xFF) * 256);
 	            System.out.println(size2[0]);
-	            System.out.println(size[1]);
+	            System.out.println(size2[1]);
 	            System.out.println(num);
                  byte[] myData = new byte[num];
                  input.read(myData);
