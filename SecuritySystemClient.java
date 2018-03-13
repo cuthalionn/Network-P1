@@ -16,6 +16,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import javax.swing.JOptionPane;
 import java.util.Scanner;
+import java.nio.ByteBuffer;
 /**
  *
  * @author taha
@@ -29,7 +30,7 @@ public class SecuritySystemClient {
         int portNumber = Integer.parseInt(args[0]);
         String username = args[1];
         String password = args[2];
-        String IPAddress = "192.168.56.1"; // Change to your own IP Address
+        String IPAddress = "127.0.0.1";
          Socket MyClient = null;
         try {
            MyClient = new Socket(IPAddress, portNumber);
@@ -54,7 +55,7 @@ public class SecuritySystemClient {
        System.out.println(e);
     }
     
-    int fileCounter=0;
+    int fileCounter=1;
     //Authorization 
     String datas = username+":"+password;
     byte[] data = datas.getBytes(StandardCharsets.US_ASCII);
@@ -86,15 +87,18 @@ public class SecuritySystemClient {
 	         else if(inMes == 4 ){//emergency
 	            System.out.println("Server: Emergency");
 	            //get data sent alarm or discard
-	            input.read();
-	            input.read();
-	            String message = "";
+                 byte[] size2 = new byte[2];
+	            input.read(size2);
+	            int num = (size2[1] & 0xFF) + ((size2[0] & 0xFF) * 256);
+	            System.out.println(size2[0]);
+	            System.out.println(size[1]);
+	            System.out.println(num);
+                 byte[] myData = new byte[num];
+                 input.read(myData);
+	            String message = new String(myData);
 	            //here
 	            BufferedWriter writer = new BufferedWriter(new FileWriter("snapshot_"+(fileCounter++)+".txt"));
-	            while((message = input.readLine()) != null){
-	            	System.out.println("not null : "+ message);
-					writer.write(message+ "\n");
-	            }
+					writer.write(message);
 	            System.out.println("Out of loop");
 				writer.close();
 				System.out.println("file closed");
